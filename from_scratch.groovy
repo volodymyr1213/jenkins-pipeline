@@ -17,23 +17,27 @@ stage("Pull Repo"){
 
 } 
 
-stage("Install Prerequisites"){ 
+stage("Install Prerequisites"){
+		sh """
+		ssh centos@jenkins_worker1.theaizada.com                sudo yum install httpd -y
+		
+}
+
+stage("Copy artifact"){ 
 sh """
-sudo yum install httpd -y 
-sudo cp -r * /var/www/html
-sudo systemstl start httpd
-"""
+scp -r *  centos@jenkins_worker1.theaizada.com:/tmp
+		ssh centos@jenkins_worker1.theaizada.com                 sudo cp -r /tmp/index.html /var/www/html/
+		ssh centos@jenkins_worker1.theaizada.com                 sudo cp -r /tmp/style.css /var/www/html/
+		ssh centos@jenkins_worker1.theaizada.com				   sudo chown centos:centos /var/www/html/
+		ssh centos@jenkins_worker1.theaizada.com				   sudo chmod 777 /var/www/html/*
+		
 } 
 
-stage("Stage3"){ 
-echo "hello" 
+stage("Restart web server"){ 
+ssh centos@jenkins_worker1.theaizada.com                 sudo "systemstl restart httpd"
 } 
 
-stage("Stage4"){ 
-echo "hello" 
-} 
-
-stage("Stage5"){ 
-echo "hello" 
-} 
-} 
+stage("Slack"){
+		slackSend color: '#BADA55', message: 'Hello, World!'
+	}
+}
