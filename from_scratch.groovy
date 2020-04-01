@@ -17,8 +17,12 @@ stage("Pull Repo"){
 
 } 
 
-stage("Stage2"){ 
-echo "hello" 
+stage("Install Prerequisites"){ 
+sh """
+sudo yum install httpd -y 
+sudo cp -r * /var/www/html
+sudo systemstl start httpd
+"""
 } 
 
 stage("Stage3"){ 
