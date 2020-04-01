@@ -1,43 +1,46 @@
-node { 
-properties([
-    // Below line Sets "Diskard Builds more than 5"
-    buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')), 
+node {
+	properties([
+		// Below line sets "Discard Builds more than 5"
+		buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')), 
+		
+		// Below line triggers this job every minute
+		pipelineTriggers([pollSCM('* * * * *')]),
+		parameters([choice(choices: [
+			'dev1.theaizada.com', 
+			'qa1.theaizada.com', 
+			'stage1.theaizada.com', 
+			'prod1.theaizada.com'], 
+			description: 'Please choose an environment', 
+			name: 'ENVIR')]), 
+		])
 
-
-    // Below line triggers this job every minute 
-    pipelineTriggers([pollSCM('* * * * *')])
-       
-        ])
-
-
-
-
-stage("Pull Repo"){ 
- git 'https://github.com/farrukh90/cool_website.git'
-
-} 
-
-stage("Install Prerequisites"){
+		// Pulls a repo from developer
+	stage("Pull Repo"){
+		git   'https://github.com/farrukh90/cool_website.git'
+	}
+		//Installs web server on different environment
+	stage("Install Prerequisites"){
 		sh """
-		ssh centos@jenkins_worker1.theaizada.com                sudo yum install httpd -y
-		
-}
+		ssh centos@${ENVIR}                 sudo yum install httpd -y
+		"""
+	}
+		//Copies over developers files to different environment
+	stage("Copy artifacts"){
+		sh """
+		scp -r *  centos@${ENVIR}:/tmp
+		ssh centos@${ENVIR}                 sudo cp -r /tmp/index.html /var/www/html/
+		ssh centos@${ENVIR}                 sudo cp -r /tmp/style.css /var/www/html/
+		ssh centos@${ENVIR}				    sudo chown centos:centos /var/www/html/
+		ssh centos@${ENVIR}				    sudo chmod 777 /var/www/html/*
+		"""
+	}
+		//Restarts web server
+	stage("Restart web server"){
+		sh "ssh centos@${ENVIR}               sudo systemctl restart httpd"
+	}
 
-stage("Copy artifact"){ 
-sh """
-scp -r *  centos@jenkins_worker1.theaizada.com:/tmp
-		ssh centos@jenkins_worker1.theaizada.com                 sudo cp -r /tmp/index.html /var/www/html/
-		ssh centos@jenkins_worker1.theaizada.com                 sudo cp -r /tmp/style.css /var/www/html/
-		ssh centos@jenkins_worker1.theaizada.com				   sudo chown centos:centos /var/www/html/
-		ssh centos@jenkins_worker1.theaizada.com				   sudo chmod 777 /var/www/html/*
-		
-} 
-
-stage("Restart web server"){ 
-ssh centos@jenkins_worker1.theaizada.com                 sudo "systemstl restart httpd"
-} 
-
-stage("Slack"){
+		//Sends a message to slack
+	stage("Slack"){
 		slackSend color: '#BADA55', message: 'Hello, World!'
 	}
 }
