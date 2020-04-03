@@ -10,7 +10,7 @@ node {
              cron('* * * * *')])
 
             ]),
-        ])     
+       
         
         
 stage("Stage1"){ 
