@@ -5,14 +5,27 @@ node {
 disableConcurrentBuilds(),
 		// Below line triggers this job every minute
 		pipelineTriggers([pollSCM('* * * * *')]),
-		parameters([choice(choices: [
+		parameters([
+			choice(choices: [
 			'dev1.theaizada.com', 
 			'qa1.theaizada.com', 
 			'stage1.theaizada.com', 
 			'prod1.theaizada.com'], 
 			description: 'Please choose an environment', 
-			name: 'ENVIR')]), 
-		])
+			name: 'ENVIR'), 
+
+choice(choices:  [
+	'v0.1', 
+   'v0.2',
+   'v0.3', 
+   'v0.4', 
+   'v0.5'],  
+description: 'Which version should we deploy?',  
+name: 'Version')
+])
+
+])
+
 
 		// Pulls a repo from developer
 	stage("Pull Repo"){
