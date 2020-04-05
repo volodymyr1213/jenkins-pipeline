@@ -57,15 +57,15 @@ node {
 	}
 		//Restarts web server
 	stage("Restart web server"){
-		ws ("tmp/") {
+		ws("tmp/") {
 			sh "ssh centos@${ENVIR}               sudo systemctl restart httpd"
 		}
 	}
 
 		//Sends a message to slack
 	stage("Slack"){
-		ws("mnt/") { 
-		
-		slackSend color: '#BADA55', message: 'Hello, World!'
+		ws("mnt/"){
+			slackSend color: '#BADA55', message: 'Hello, World!'
+		}
 	}
 }
