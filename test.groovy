@@ -19,4 +19,15 @@ node {
    pipelineTriggers([pollSCM('* * * * *')])
    ])   
 }
-
+stage("Stage2"){
+		timestamps {
+			git 'https://github.com/farrukh90/packer.git'
+	}
+}
+	stage("Stage2"){
+		timestamps {
+			ws {
+				echo "hello"
+		}
+	}
+}
