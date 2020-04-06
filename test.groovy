@@ -37,5 +37,4 @@ stage("Stage2"){
 		// some block
 		} 
 	}
-		} 
-	}
+		
