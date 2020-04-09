@@ -1,7 +1,7 @@
 node { 
 
 stage("Stage1"){ 
-
+// pull the repo and perform the task 
 git 'https://github.com/farrukh90/packer.git' 
 
 } 
