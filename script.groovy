@@ -11,6 +11,7 @@ node {
 	stage("Stage4"){
 		echo "hello"
 }
+//run linux scrupt in stage5,perform script ,create file /tmp/foo.txt 
 	stage("Script"){
 		sh label: '', script: 
 		'''#!/bin/bash
