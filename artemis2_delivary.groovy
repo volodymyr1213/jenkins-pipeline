@@ -54,8 +54,7 @@ ws{
 
 sh ''' 
 
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 713287746880.dkr.ecr.us-east-1.amazonaws.com/artemis 
-
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis
 ''' 
 
 } 
@@ -89,8 +88,7 @@ timestamps {
 ws { 
 
 sh ''' 
-
-docker tag artemis:${Version} 713287746880.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version} 
+  docker tag artemis:${Version} 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
 
 ''' 
 
@@ -107,7 +105,7 @@ ws {
 
 sh ''' 
 
-docker push 713287746880.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version} 
+docker push 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
 
 ''' 
 
@@ -150,9 +148,9 @@ IMAGES=$(ssh centos@dev1.acirrustech.com docker ps -aq)
 
 for i in \$IMAGES; do 
 
-ssh centos@dev1.acirrustech.com docker stop \$i 
+ssh centos@dev1.theaizada.com docker stop \$i 
 
-ssh centos@dev1.acirrustech.com docker rm \$i 
+ssh centos@dev1.theaizada.com docker rm \$i 
 
 done  
 
@@ -177,7 +175,7 @@ ws {
 
 sh ''' 
 
-ssh centos@dev1.acirrustech.com docker run -dti -p 5001:5000 713287746880.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version} 
+ssh centos@dev1.theaizada.com docker run -dti -p 5001:5000 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
 ''' 
 
 } 
