@@ -148,9 +148,9 @@ IMAGES=$(ssh centos@dev1.acirrustech.com docker ps -aq)
 
 for i in \$IMAGES; do 
 
-ssh centos@dev1.theaizada.com docker stop \$i 
+ssh centos@${ENVIR} docker stop \$i 
 
-ssh centos@dev1.theaizada.com docker rm \$i 
+ssh centos@${ENVIR} docker rm \$i 
 
 done  
 
@@ -175,7 +175,7 @@ ws {
 
 sh ''' 
 
-ssh centos@dev1.theaizada.com docker run -dti -p 5001:5000 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
+ssh centos@${ENVIR} docker run -dti -p 5001:5000 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
 ''' 
 
 } 
