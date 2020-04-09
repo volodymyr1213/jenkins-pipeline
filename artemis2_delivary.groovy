@@ -175,6 +175,7 @@ ws {
 
 sh ''' 
 
+ ssh centos@${ENVIR} aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis
 ssh centos@${ENVIR} docker run -dti -p 5001:5000 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
 ''' 
 
