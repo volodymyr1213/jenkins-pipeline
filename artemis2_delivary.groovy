@@ -144,29 +144,20 @@ sh '''
 
 #!/bin/bash 
 
-IMAGES=$(ssh centos@dev1.acirrustech.com docker ps -aq)  
+IMAGES=$(ssh centos@${ENVIR} docker ps -aq) 
+for i in \$IMAGES; do
 
-for i in \$IMAGES; do 
-
-ssh centos@${ENVIR} docker stop \$i 
-
-ssh centos@${ENVIR} docker rm \$i 
-
-done  
-
-''' 
-
-} catch(e) { 
-
-println("Script failed with error: ${e}") 
-
-} 
-
-} 
-
-} 
-
-} 
+ssh centos@${ENVIR} docker stop \$i
+								ssh centos@${ENVIR} docker rm \$i
+							done 
+							'''
+					} catch(e) {
+						println("Script failed with error: ${e}")
+						}
+					}
+				}
+			}
+            
 stage("Run Container"){ 
 
 timestamps { 
