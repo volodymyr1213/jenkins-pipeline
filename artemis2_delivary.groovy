@@ -7,15 +7,22 @@ node {
 				'0.2', 
 				'0.3', 
 				'0.4', 
-				'0.5',
-				'0.6',
-				'0.7',
-				'0.8',
-				'0.9',
-				'10',
-			], 
+				'0.5'],
 		description: 'Which version of the app should I deploy? ', 
-		name: 'Version')])])
+		name: 'Version'),
+        choice(choices:  
+      [
+    'dev1.theaizada.com',  
+    'qa1.theaizada.com',  
+    'stage1.theaizada.com',  
+    'prod1.theaizada.com'], 
+	description: 'Please provide an environment to build the application',  
+    name: 'ENVIR')])]) 
+
+
+
+
+
 		stage("Stage1"){
 			timestamps {
 				ws {
@@ -45,7 +52,7 @@ node {
 			timestamps {
 				ws {
 					sh '''
-                    docker tag artemis:${Version} 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
+					docker tag artemis:${Version} 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
 					'''
 					}
 				}
@@ -55,6 +62,8 @@ node {
 				ws {
 					sh '''
 						docker push 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
+					'''
+				
 						'''
 				}
 			}
@@ -76,6 +85,7 @@ node {
                         	}
 			}
 		}
+		
 		stage("Clean Up"){
 			timestamps {
 				ws {
@@ -94,6 +104,7 @@ node {
 					}
 				}
 			}
+		
 		
 	stage("Run Container"){
 		timestamps {
