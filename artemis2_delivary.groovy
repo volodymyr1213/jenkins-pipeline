@@ -26,7 +26,7 @@ node {
 		timestamps {
 			ws{
 				sh '''
-				aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis
+				aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin  965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis
 					'''
 				}
 			}
@@ -81,10 +81,10 @@ node {
 					try {
 						sh '''
 							#!/bin/bash
-							IMAGES=$(ssh centos@dev1.theaizada.com docker ps -aq) 
+							IMAGES=$(ssh centos@${ENVIR} docker ps -aq) 
 							for i in \$IMAGES; do
-								ssh centos@dev1.theaizada.com docker stop \$i
-								ssh centos@dev1.theaizada.com docker rm \$i
+								ssh centos@${ENVIR} docker stop \$i
+								ssh centos@${ENVIR} docker rm \$i
 							done 
 							'''
 					} catch(e) {
@@ -98,7 +98,9 @@ node {
 		timestamps {
 			ws {
 				sh '''
-					ssh centos@dev1.theaizada.com  docker run -dti -p 5001:5000 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
+				    ssh centos@${ENVIR} aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin  965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis
+
+					ssh centos@${ENVIR}  docker run -dti -p 5001:5000 965334959964.dkr.ecr.us-east-1.amazonaws.com/artemis:${Version}
 					'''
             }
         }
