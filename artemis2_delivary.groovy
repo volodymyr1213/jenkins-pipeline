@@ -70,7 +70,7 @@ node {
 			timestamps {
 				ws {
 					sh '''
-						ssh centos@dev1.theaizada.com$(aws ecr get-login --no-include-email --region us-east-1)
+						ssh centos@dev1.theaizada.com $(aws ecr get-login --no-include-email --region us-east-1)
 						'''
 				}
 			}
@@ -81,7 +81,7 @@ node {
 					try {
 						sh '''
 							#!/bin/bash
-							IMAGES=$(ssh centos@dev1.acirrustech.com docker ps -aq) 
+							IMAGES=$(ssh centos@dev1.theaizada.com docker ps -aq) 
 							for i in \$IMAGES; do
 								ssh centos@dev1.theaizada.com docker stop \$i
 								ssh centos@dev1.theaizada.com docker rm \$i
